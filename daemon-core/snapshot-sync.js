@@ -19,7 +19,7 @@ async function checkForNewSnapshots(peer) {
 }
 async function attemptAddingPowerSnapshot(snapshotString) {
     let signature = Buffer.from(snapshotString.split(":")[0].split(";")[0], "base64")
-    let signers = snapshotString.split(":")[0].split(";")[1].map(signerPubkey => Buffer.from(signerPubkey, "base64"))
+    let signers = snapshotString.split(":")[0].split(";")[1].split(",").map(signerPubkey => Buffer.from(signerPubkey, "base64"))
     let newPowerSet = snapshotString.split(":")[1].split(";").map(pubkey => Buffer.from(pubkey, "base64"))
     let correlatedSigners = currentPowerSet.filter(signerInActivePowerSet => signers.find(signer => signer.toString("base64") == signerInActivePowerSet.toString("base64")))
     if (Math.floor(correlatedSigners.length / 2) + 1 < currentPowerSet.length) {
