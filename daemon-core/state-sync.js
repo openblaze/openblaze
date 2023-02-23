@@ -5,7 +5,7 @@ let stateSuggestions = []
 module.exports = async () => {
 
     for (peer of peers) {
-        await checkForNewState(peer)
+        checkForNewState(peer)
     }
 
 }

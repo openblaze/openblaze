@@ -35,7 +35,7 @@ module.exports = async (dirname) => {
             needToWrite.delete("powerSnapshots")
         }
         if (needToWrite.has("peers")) {
-            fs.writeFileSync(path.join(dirname, "peers.json"), JSON.stringify(peers))
+            fs.writeFileSync(path.join(dirname, "peers.json"), JSON.stringify([...peers]))
             needToWrite.delete("peers")
         }
         if (needToWrite.has("state")) {
