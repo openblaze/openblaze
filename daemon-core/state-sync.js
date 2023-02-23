@@ -28,7 +28,7 @@ async function checkPendingStates() {
 
     let threshold = Math.floor(currentPowerSet.length / 2) + 1
 
-    stateSuggestions = stateSuggestions.filter(suggestion => suggestion.expires > Date.now() && suggestion.sequence > state.sequence)
+    stateSuggestions = stateSuggestions.filter(suggestion => suggestion.expires > Date.now() && suggestion.sequence > (state.sequence || 0))
 
     let count = stateSuggestions.reduce((pv, cv) => {
         if (!pv[cv.stateHash]) {
