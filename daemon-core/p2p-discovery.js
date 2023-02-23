@@ -5,9 +5,14 @@ module.exports = async () => {
         pushNodeToPeer(peer)
     })
 }
+let peerFailureCounter = {}
 async function addPeersFrom(bootstrap) {
     let subpeers = await fetch("http://" + bootstrap + "/peers").then(res => res.json()).catch(e => { console.log(e); return null })
     if (subpeers == null || !Array.isArray(subpeers)) {
+        if (peerFailureCounter[bootstrap]) { peerFailureCounter[bootstrap]++ } else { peerFailureCounter[bootstrap]++ }
+        if (peerFailureCounter[bootstrap] > 100) {
+            peers.delete(bootstrap)
+        }
         console.log("Failed to fetch peers from " + bootstrap)
         return
     }
