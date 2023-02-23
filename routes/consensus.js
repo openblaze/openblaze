@@ -73,9 +73,9 @@ module.exports = async function (fastify, opts) {
             signer: config.pubkey
         })
         peers.forEach(async peer => {
-            await fetch('http://' + peer + "/broadcastTx", {
+            fetch('http://' + peer + "/broadcastTx", {
                 method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(txBody)
-            }).then(res => res.json())
+            }).then(res => res.json()).catch(e => console.error("Error delivering tx to peer " + peer))
         })
         return { ok: true }
     })
