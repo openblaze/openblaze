@@ -40,7 +40,7 @@ module.exports = async function (fastify, opts) {
         let txHash = crypto.createHash("sha256").update(JSON.stringify({ input: txBody.input, type: txBody.type, anchoredTxId: txBody.anchoredTxId, expires: txBody.expires, signature: txBody.signature })).digest("base64url")
         if (anchorLocks.get(txBody.anchoredTxId)?.expiryTime > Date.now() && anchorLocks.get(txBody.anchoredTxId)?.txHash != txHash) { return { error: "Another tx achored to this anchor is in processing right now" } }
         if (txBody.expires < Date.now()) { return { error: "Tx expired" } }
-        if (txBody.anchoredTxId != (state.lastTxIds[txBody.signer] || null)) {
+        if (txBody.anchoredTxId != (state.lastTxIds[txBody.signer] || txBody.signer)) {
             return { error: "Invalid anchor" }
         }
 
@@ -81,7 +81,7 @@ module.exports = async function (fastify, opts) {
     })
     fastify.get("/lastTxId/:account", async (request, reply) => {
 
-        return state.lastTxIds[request.params.account] || null
+        return state.lastTxIds[request.params.account] || txBody.signer
     })
 
 }
