@@ -9,7 +9,7 @@ let peerFailureCounter = {}
 async function addPeersFrom(bootstrap) {
     let subpeers = await fetch("http://" + bootstrap + "/peers").then(res => res.json()).catch(e => { console.log(e); return null })
     if (subpeers == null || !Array.isArray(subpeers)) {
-        if (peerFailureCounter[bootstrap]) { peerFailureCounter[bootstrap]++ } else { peerFailureCounter[bootstrap]++ }
+        if (peerFailureCounter[bootstrap]) { peerFailureCounter[bootstrap]++ } else { peerFailureCounter[bootstrap] = 1 }
         if (peerFailureCounter[bootstrap] > 10) {
             peers.delete(bootstrap)
         }
