@@ -54,4 +54,4 @@ async function checkPendingStates() {
     console.log("Upgraded state to " + nextState)
     needToWrite.add("state")
 }
-setInterval(checkPendingStates, 5000)
+setInterval(() => checkPendingStates(), 5000)
