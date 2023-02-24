@@ -6,11 +6,9 @@ let fs = require("fs");
 const fastify = require('fastify')({})
 const AutoLoad = require("@fastify/autoload");
 module.exports = async (dirname) => {
+    console.log("Starting daemon in", dirname)
     global.peers = new Set(JSON.parse(fs.readFileSync(path.join(dirname, "peers.json"))))
     global.anchorLocks = new Map()
-    console.log("Starting daemon in", dirname)
-
-
     global.powerSnapshots = JSON.parse(fs.readFileSync(path.join(dirname, "powerSnapshots.json")))
     global.config = JSON.parse(fs.readFileSync(path.join(dirname, "config.json")))
     global.state = JSON.parse(fs.readFileSync(path.join(dirname, "state.json")))
