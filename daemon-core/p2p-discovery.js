@@ -23,7 +23,9 @@ async function addPeersFrom(bootstrap) {
         return
     }
     subpeers = subpeers.filter(subpeer => peerFailureCounter[subpeer] < 10)
-    console.log("Added peers " + subpeers.join(", "))
+    if (subpeers.filter(sp => peers.has(sp).length < 1){
+        console.log("Added peers " + subpeers.filter(sp => peers.has(sp)).join(", "))
+    }
     peers = new Set([...peers, ...subpeers])
     needToWrite.add("peers")
 }
