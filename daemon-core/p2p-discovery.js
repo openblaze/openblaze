@@ -34,3 +34,6 @@ async function addPeersFrom(bootstrap) {
 async function pushNodeToPeer(peer) {
     await fetch("http://" + peer + "/listPeer", { method: "POST", body: config.externalIp + ":11520" }).then(res => res.json()).catch(e => { return null })
 }
+setInterval(() => {
+    peerFailureCounter = {}
+}, 100000)
