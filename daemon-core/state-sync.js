@@ -10,7 +10,7 @@ module.exports = async () => {
 
 }
 async function checkForNewState(peer) {
-    let stateSuggestion = await fetch("http://" + peer + "/stateSignature").then(res => res.json()).catch(e => { console.log(e); return null })
+    let stateSuggestion = await fetch("http://" + peer + "/stateSignature").then(res => res.json()).catch(e => { return null })
     if (!stateSuggestion || !stateSuggestion.stateHash || !stateSuggestion.signature || !stateSuggestion.signer || !stateSuggestion.expires || typeof stateSuggestion.sequence != "number") {
         return console.error("Failed to fetch state suggestion from " + peer + ", error message: " + stateSuggestion?.error)
     }

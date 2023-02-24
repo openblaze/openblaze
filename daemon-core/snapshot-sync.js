@@ -9,7 +9,7 @@ module.exports = async () => {
 }
 async function checkForNewSnapshots(peer) {
 
-    let newSnapshots = await fetch("http://" + peer + "/snapshotsSince/" + powerSnapshots[powerSnapshots.length - 1].split(":")[0].split(";")[0]).then(res => res.json()).catch(e => { console.log(e); return null })
+    let newSnapshots = await fetch("http://" + peer + "/snapshotsSince/" + powerSnapshots[powerSnapshots.length - 1].split(":")[0].split(";")[0]).then(res => res.json()).catch(e => { return null })
     if (!newSnapshots || newSnapshots.error || !Array.isArray(newSnapshots.snapshots)) {
         return console.error("Failed to fetch snapshots from " + peer)
     }
