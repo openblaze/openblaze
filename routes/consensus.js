@@ -57,7 +57,7 @@ module.exports = async function (fastify, opts) {
         })
         if (txBody.senateSignatures.length >= threshold) {
             await txHandler(txBody)
-            return { ok: true }
+            return { ok: true, txHash }
         }
         if (txBody.senateSignatures.find(sigObj => sigObj.signer == config.pubkey)) { return { error: "This node already signed this tx" } }
         let currentNodeSignature = Buffer.from(
@@ -77,7 +77,7 @@ module.exports = async function (fastify, opts) {
                 method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(txBody)
             }).then(res => res.json()).catch(e => console.error("Error delivering tx to peer " + peer))
         })
-        return { ok: true }
+        return { ok: true, txHash }
     })
     fastify.get("/lastTxId/:account", async (request, reply) => {
 
