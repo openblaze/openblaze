@@ -81,7 +81,7 @@ module.exports = async function (fastify, opts) {
     })
     fastify.get("/lastTxId/:account", async (request, reply) => {
 
-        return state.lastTxIds[request.params.account] || txBody.signer
+        return state.lastTxIds[request.params.account] || request.params.account
     })
 
 }
