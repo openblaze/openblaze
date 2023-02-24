@@ -19,11 +19,13 @@ async function addPeersFrom(bootstrap) {
         console.log("Failed to fetch peers from " + bootstrap)
         return
     }
+
+
+    subpeers = subpeers.filter(subpeer => peerFailureCounter[subpeer] < 10)
     if (subpeers.filter(sp => !peers.has(sp)).length < 1) {
         return
     }
-    subpeers = subpeers.filter(subpeer => peerFailureCounter[subpeer] < 10)
-
+    console.log(subpeers.filter(sp => !peers.has(sp)))
     console.log("Added peers " + subpeers.filter(sp => peers.has(sp)).join(", "))
 
     peers = new Set([...peers, ...subpeers])
