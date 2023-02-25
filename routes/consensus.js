@@ -44,6 +44,7 @@ module.exports = async function (fastify, opts) {
         if (anchorLocks.get(txBody.anchoredTxId)?.expiryTime > Date.now() && anchorLocks.get(txBody.anchoredTxId)?.txHash != txHash) { return { error: "Another tx achored to this anchor is in processing right now" } }
         if (txBody.expires < Date.now()) { return { error: "Tx expired" } }
         if (txBody.anchoredTxId != (state.lastTxIds[txBody.signer] || txBody.signer)) {
+            console.log(txBody.anchoredTxId, state.lastTxIds[txBody.signer])
             return { error: "Invalid anchor" }
         }
         console.log(txBody)
