@@ -39,6 +39,7 @@ module.exports = async function (fastify, opts) {
         ) {
             return { error: "Invalid tx body" }
         }
+        console.log(txBody)
         let txHash = crypto.createHash("sha256").update(JSON.stringify({ input: txBody.input, type: txBody.type, anchoredTxId: txBody.anchoredTxId, expires: txBody.expires, signature: txBody.signature })).digest("base64url")
         if (anchorLocks.get(txBody.anchoredTxId)?.expiryTime > Date.now() && anchorLocks.get(txBody.anchoredTxId)?.txHash != txHash) { return { error: "Another tx achored to this anchor is in processing right now" } }
         if (txBody.expires < Date.now()) { return { error: "Tx expired" } }
