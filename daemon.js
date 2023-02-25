@@ -3,6 +3,7 @@ let path = require("path");
 let { fetch } = require("undici")
 let os = require('os');
 let fs = require("fs");
+let crypto = require("crypto")
 const fastify = require('fastify')({})
 const AutoLoad = require("@fastify/autoload");
 module.exports = async (dirname) => {
@@ -18,7 +19,7 @@ module.exports = async (dirname) => {
     global.needToWrite = new Set()
     console.log("Authorized as " + config.pubkey)
     console.log("Current power snapshot: " + powerSnapshots[powerSnapshots.length - 1])
-
+    console.log("State hash: " + crypto.createHash("sha256").update(JSON.stringify(state)).digest("base64url"))
     let updatePeers = require("./daemon-core/p2p-discovery")
     let updateState = require("./daemon-core/state-sync")
     let updateSnapshots = require("./daemon-core/snapshot-sync")
