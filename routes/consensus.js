@@ -47,9 +47,16 @@ module.exports = async function (fastify, opts) {
             return { error: "Invalid anchor" }
         }
 
-
         let dataForAccountSign = Buffer.from(JSON.stringify({ input: txBody.input, type: txBody.type, anchoredTxId: txBody.anchoredTxId, expires: txBody.expires }))
         if (!bls.verify(Buffer.from(txBody.signature, "base64"), dataForAccountSign, Buffer.from(txBody.signer, "base64"))) { return { error: "Signature verification failed" } }
+
+        if(!state.balances[txBody.signer]) {
+            return { error: "Unable to afford gas" }
+        }
+    
+        if(BigInt(state.balances[txBody.signer].amount) < BigInt(state.params.gas[txBody.type])) {
+            return { error: `${state.params.gas[txBody.type]} is more than balance (${state.balances[txBody.signer].amount})` }
+        }
 
         txBody.senateSignatures = txBody.senateSignatures.filter((item,
             index) => txBody.senateSignatures.findIndex(i => i.signer == item.signer) === index).filter(sigObj => {
@@ -74,11 +81,13 @@ module.exports = async function (fastify, opts) {
                 Buffer.from(config.privkey, "base64url")
             )
         ).toString("base64")
+
         txBody.senateSignatures.push({
             expires: allowanceTime,
             signature: currentNodeSignature,
             signer: config.pubkey
         })
+
         anchorLocks.set(txBody.anchoredTxId, { expiryTime: allowanceTime + 5000, txHash })
 
         peers.forEach(async peer => {
