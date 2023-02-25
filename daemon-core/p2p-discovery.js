@@ -36,4 +36,4 @@ async function pushNodeToPeer(peer) {
 }
 setInterval(() => {
     peerFailureCounter = {}
-}, 100000)
+}, 120000)

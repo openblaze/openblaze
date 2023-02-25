@@ -62,7 +62,7 @@ module.exports = async function (fastify, opts) {
             })
 
         if (txBody.senateSignatures.length >= threshold) {
-            console.log(txBody)
+
             txHandler(txBody)
 
         }
