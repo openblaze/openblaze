@@ -50,6 +50,7 @@ module.exports = async function (fastify, opts) {
 
         let dataForAccountSign = Buffer.from(JSON.stringify({ input: txBody.input, type: txBody.type, anchoredTxId: txBody.anchoredTxId, expires: txBody.expires }))
         if (!bls.verify(Buffer.from(txBody.signature, "base64"), dataForAccountSign, Buffer.from(txBody.signer, "base64"))) { return { error: "Signature verification failed" } }
+
         txBody.senateSignatures = txBody.senateSignatures.filter((_sigObj, index) => {
             return !txBody.senateSignatures.find((_s, si) => si != index)
         }).filter(sigObj => {
@@ -61,29 +62,31 @@ module.exports = async function (fastify, opts) {
             return true
         })
         console.log(txBody.senateSignatures)
+        if (txBody.senateSignatures.length >= threshold) {
+            txHandler(txBody)
 
-        if (txBody.senateSignatures.find(sigObj => sigObj.signer == config.pubkey)) { return { error: "This node already signed this tx" } }
+        }
+        if (!txBody.senateSignatures.find(sigObj => sigObj.signer == config.pubkey)) { return { error: "This node already signed this tx" } }
         let currentNodeSignature = Buffer.from(
             bls.sign(
                 Buffer.from(JSON.stringify({ input: txBody.input, type: txBody.type, anchoredTxId: txBody.anchoredTxId, expires: txBody.expires, signature: txBody.signature, senatorSigExpires: allowanceTime })),
                 Buffer.from(config.privkey, "base64url")
             )
         ).toString("base64")
-        anchorLocks.set(txBody.anchoredTxId, { expiryTime: allowanceTime + 5000, txHash })
         txBody.senateSignatures.push({
             expires: allowanceTime,
             signature: currentNodeSignature,
             signer: config.pubkey
         })
+        anchorLocks.set(txBody.anchoredTxId, { expiryTime: allowanceTime + 5000, txHash })
+
         peers.forEach(async peer => {
             fetch('http://' + peer + "/broadcastTx", {
                 method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(txBody)
             }).then(res => res.json()).catch(e => console.error("Error delivering tx to peer " + peer))
         })
-        if (txBody.senateSignatures.length >= threshold) {
-            await txHandler(txBody)
-            return { ok: true, txHash }
-        }
+
+        return { ok: true, txHash }
     })
     fastify.get("/lastTxId/:account", async (request, reply) => {
 
