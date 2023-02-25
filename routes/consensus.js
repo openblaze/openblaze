@@ -50,7 +50,7 @@ module.exports = async function (fastify, opts) {
 
         let dataForAccountSign = Buffer.from(JSON.stringify({ input: txBody.input, type: txBody.type, anchoredTxId: txBody.anchoredTxId, expires: txBody.expires }))
         if (!bls.verify(Buffer.from(txBody.signature, "base64"), dataForAccountSign, Buffer.from(txBody.signer, "base64"))) { return { error: "Signature verification failed" } }
-
+        console.log(txBody.senateSignatures)
         txBody.senateSignatures = txBody.senateSignatures.filter((_sigObj, index) => {
             return !txBody.senateSignatures.find((_s, si) => si != index)
         }).filter(sigObj => {
@@ -61,12 +61,13 @@ module.exports = async function (fastify, opts) {
             if (!bls.verify(Buffer.from(sigObj.signature, "base64"), Buffer.from(JSON.stringify({ input: txBody.input, type: txBody.type, anchoredTxId: txBody.anchoredTxId, expires: txBody.expires, signature: txBody.signature, senatorSigExpires: sigObj.expires })), Buffer.from(sigObj.signer, "base64"))) { return false }
             return true
         })
-        console.log(txBody.senateSignatures)
+        console.log(txBody.senateSignatures.length)
         if (txBody.senateSignatures.length >= threshold) {
             txHandler(txBody)
 
         }
         if (txBody.senateSignatures.find(sigObj => sigObj.signer == config.pubkey)) { return { error: "This node already signed this tx" } }
+        console.log(txBody.senateSignatures.length)
         let currentNodeSignature = Buffer.from(
             bls.sign(
                 Buffer.from(JSON.stringify({ input: txBody.input, type: txBody.type, anchoredTxId: txBody.anchoredTxId, expires: txBody.expires, signature: txBody.signature, senatorSigExpires: allowanceTime })),
