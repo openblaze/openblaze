@@ -52,7 +52,7 @@ module.exports = async function (fastify, opts) {
         if (!bls.verify(Buffer.from(txBody.signature, "base64"), dataForAccountSign, Buffer.from(txBody.signer, "base64"))) { return { error: "Signature verification failed" } }
         console.log(txBody.senateSignatures)
         txBody.senateSignatures = txBody.senateSignatures.filter((item,
-            index) => arr.indexOf(item) === index).filter(sigObj => {
+            index) => txBody.senateSignatures.findIndex(i => i.signer == item.signer) === index).filter(sigObj => {
 
                 if (typeof sigObj.signer != "string" || typeof sigObj.signature != "string" || typeof sigObj.expires != "number") { return false }
                 if (sigObj.expires < Date.now()) { return false }
