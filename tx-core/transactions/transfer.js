@@ -4,7 +4,7 @@ module.exports = async (tx) => {
     }
 
     // User doesnt have any tokens
-    if(!state.balances[tx.signer].amount) {
+    if(!state.balances[tx.signer]) {
         throw new Error("Cant transfer without balance")
     }
 
