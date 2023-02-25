@@ -3,14 +3,12 @@ module.exports = async (tx) => {
     if (!tx.input || !tx.input.senatorPubkey) {
         throw new Error("Not enough info")
     }
-    console.log(tx.input.senatorPubkey, state.senateCandidates[tx.input.senatorPubkey],)
     if (!state.senateCandidates[tx.input.senatorPubkey]) { return new Error("No senator with this pubkey is in candidates list") }
     if (!currentPowerSet.find(senatorpk => senatorpk.toString("base64url") == tx.signer)) {
         throw new Error("Signer is not senator")
     }
 
     state.senateCandidates[tx.input.senatorPubkey].votes.push(tx.signer)
-    console.log(1, state.senateCandidates[tx.input.senatorPubkey].votes)
     if (state.senateCandidates[tx.input.senatorPubkey].votes.length >= threshold) {
         state.senators[tx.input.senatorPubkey] = state.senateCandidates[tx.input.senatorPubkey]
     }
