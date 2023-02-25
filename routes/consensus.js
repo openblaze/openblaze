@@ -23,6 +23,7 @@ module.exports = async function (fastify, opts) {
     })
     fastify.post("/broadcastTx", async (request, reply) => {
         let threshold = Math.floor(currentPowerSet.length / 2) + 1
+        console.log(threshold)
         let allowanceTime = Date.now() + 30000
         let txBody = request.body
         if (
@@ -56,6 +57,7 @@ module.exports = async function (fastify, opts) {
             if (!bls.verify(Buffer.from(sigObj.signature, "base64"), Buffer.from(JSON.stringify({ input: txBody.input, type: txBody.type, anchoredTxId: txBody.anchoredTxId, expires: txBody.expires, signature: txBody.signature, senatorSigExpires: sigObj.expires })), Buffer.from(sigObj.signer, "base64"))) { return false }
             return true
         })
+        console.log(txBody.senateSignatures)
         if (txBody.senateSignatures.length >= threshold) {
             await txHandler(txBody)
             return { ok: true, txHash }

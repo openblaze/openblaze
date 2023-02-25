@@ -16,7 +16,9 @@ module.exports = async () => {
         signatures.push(signatureForNextSnapshot)
     })
     setTimeout(async () => {
-
+        if (signatures.length < 1) {
+            return
+        }
         attemptAddingPowerSnapshot(Buffer.from(bls.aggregateSignatures(signatures.map(s => Buffer.from(s.signature, "base64")))).toString("base64url") + ";" + signatures.map(sig => sig.signer.toString("base64url")).join(",") + ":" + contentToSign)
     }, 10000)
 }

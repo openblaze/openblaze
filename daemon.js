@@ -13,6 +13,7 @@ module.exports = async (dirname) => {
     global.config = JSON.parse(fs.readFileSync(path.join(dirname, "config.json")))
     global.state = JSON.parse(fs.readFileSync(path.join(dirname, "state.json")))
     global.currentPowerSet = powerSnapshots[powerSnapshots.length - 1].split(":")[1].split(",").map(pubkey => Buffer.from(pubkey, "base64"))
+    console.log(currentPowerSet.map(e => e.toString("base64url")))
     let senatorNode = !!currentPowerSet.find(pk => config.pubkey == pk.toString("base64url"))
     global.needToWrite = new Set()
     console.log("Authorized as " + config.pubkey)

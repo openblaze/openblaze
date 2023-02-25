@@ -9,7 +9,7 @@ module.exports = async () => {
 
 }
 async function checkForNewSnapshots(peer) {
-    console.log(crypto.createHash("sha256").update(powerSnapshots[powerSnapshots.length - 1].split(":")[0].split(";")[0]).digest("base64url"))
+
     let newSnapshots = await fetch("http://" + peer + "/snapshotsSince/" + crypto.createHash("sha256").update(powerSnapshots[powerSnapshots.length - 1].split(":")[0].split(";")[0]).digest("base64url")).then(res => res.json()).catch(e => { return null })
     if (!newSnapshots || newSnapshots.error || !Array.isArray(newSnapshots.snapshots)) {
         return console.error("Failed to fetch snapshots from " + peer)
