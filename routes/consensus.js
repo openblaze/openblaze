@@ -66,7 +66,7 @@ module.exports = async function (fastify, opts) {
             txHandler(txBody)
 
         }
-        if (!txBody.senateSignatures.find(sigObj => sigObj.signer == config.pubkey)) { return { error: "This node already signed this tx" } }
+        if (txBody.senateSignatures.find(sigObj => sigObj.signer == config.pubkey)) { return { error: "This node already signed this tx" } }
         let currentNodeSignature = Buffer.from(
             bls.sign(
                 Buffer.from(JSON.stringify({ input: txBody.input, type: txBody.type, anchoredTxId: txBody.anchoredTxId, expires: txBody.expires, signature: txBody.signature, senatorSigExpires: allowanceTime })),
