@@ -5,7 +5,7 @@ let { fetch } = require("undici")
 let txHandler = require("../tx-core/handler")
 module.exports = async function (fastify, opts) {
     fastify.get("/snapshotsSince/:trustedSnapshotSignature", async (request, reply) => {
-        let requestedPowerIndex = powerSnapshots.findIndex(snapshot => snapshot.split(":")[0].split(";")[0] == request.params.trustedSnapshotSignature)
+        let requestedPowerIndex = powerSnapshots.findIndex(snapshot => crypto.createHash("sha256").update(snapshot.split(":")[0].split(";")[0]).digest("base64url") == request.params.trustedSnapshotSignature)
         if (requestedPowerIndex < 0) {
             reply.status(404)
             return { error: "Requested trusted snapshot isn't available to this node" }
