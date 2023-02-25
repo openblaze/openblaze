@@ -10,7 +10,7 @@ module.exports = async (tx) => {
     state.lastTxIds[tx.signer] = txId
     if (fs.existsSync(path.join(__dirname, "transactions", tx.type + ".js"))) {
         await (require(path.join(__dirname, "transactions", tx.type + ".js")))(tx).catch(error => {
-            console.error("[TX EXECUTION ERROR] (" + txId + ") ", error)
+            console.error("[TX EXECUTION ERROR] (" + txId + ")", error)
         })
     }
     needToWrite.add("state")
