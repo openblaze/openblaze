@@ -12,7 +12,7 @@ module.exports = async (dirname) => {
     global.powerSnapshots = JSON.parse(fs.readFileSync(path.join(dirname, "powerSnapshots.json")))
     global.config = JSON.parse(fs.readFileSync(path.join(dirname, "config.json")))
     global.state = JSON.parse(fs.readFileSync(path.join(dirname, "state.json")))
-    global.currentPowerSet = powerSnapshots[powerSnapshots.length - 1].split(":")[1].split(";").map(pubkey => Buffer.from(pubkey, "base64"))
+    global.currentPowerSet = powerSnapshots[powerSnapshots.length - 1].split(":")[1].split(",").map(pubkey => Buffer.from(pubkey, "base64"))
     let senatorNode = !!currentPowerSet.find(pk => config.pubkey == pk.toString("base64url"))
     global.needToWrite = new Set()
     console.log("Authorized as " + config.pubkey)
@@ -21,12 +21,14 @@ module.exports = async (dirname) => {
     let updatePeers = require("./daemon-core/p2p-discovery")
     let updateState = require("./daemon-core/state-sync")
     let updateSnapshots = require("./daemon-core/snapshot-sync")
+    let buildNewSnapshot = require("./daemon-core/new-snapshot-builder")
     updatePeers()
     updateSnapshots()
     updateState()
     setInterval(updatePeers, 10000)
     setInterval(updateSnapshots, 20000)
     setInterval(updateState, 10000)
+    setInterval(buildNewSnapshot, 20000)
     function saveUpdates() {
         if (needToWrite.has("powerSnapshots")) {
             fs.writeFileSync(path.join(dirname, "powerSnapshots.json"), JSON.stringify(powerSnapshots))

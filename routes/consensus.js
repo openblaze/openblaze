@@ -1,5 +1,6 @@
 let { bls12_381: bls } = require('@noble/curves/bls12-381');
 let crypto = require("crypto");
+
 let { fetch } = require("undici")
 let txHandler = require("../tx-core/handler")
 module.exports = async function (fastify, opts) {
@@ -83,5 +84,8 @@ module.exports = async function (fastify, opts) {
 
         return state.lastTxIds[request.params.account] || request.params.account
     })
+    fastify.get("/signatureForNextSnapshot", async (request, reply) => {
 
+        return { signer: config.pubkey, signature: Buffer.from(bls.sign(Buffer.from(Object.keys(state.senators).join(",")), Buffer.from(config.privkey, "base64url"))).toString("base64") }
+    })
 }
