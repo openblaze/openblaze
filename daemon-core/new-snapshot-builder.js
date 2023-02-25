@@ -4,9 +4,9 @@ let attemptAddingPowerSnapshot = require("../utils/attemptAddingSnapshot")
 module.exports = async () => {
     if (!state?.senators) { return console.log("Waiting for state sync") }
     if (Object.keys(state.senators).join(",") == currentPowerSet.map(senatorpk => senatorpk.toString("base64url")).join(",")) {
-        console.log("Snapshot corresponds state")
         return
     }
+    console.log("Snapshot corresponds state, trying to generate new snapshot...")
     let contentToSign = Buffer.from(Object.keys(state.senators).join(","))
     let signatures = []
 
