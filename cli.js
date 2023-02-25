@@ -129,7 +129,7 @@ daemon.command("init [directory]")
             daemonConfig.externalIp = await fetch("https://ifconfig.me/ip").then(res => res.text())
         }
         fs.writeFileSync(path.join(dirname, "config.json"), JSON.stringify(daemonConfig, null, " "))
-        fs.writeFileSync(path.join(dirname, "peers.json"), JSON.stringify(daemonConfig.seedPeers.split(" ")))
+        fs.writeFileSync(path.join(dirname, "peers.json"), JSON.stringify([daemonConfig.externalIp + ":11520", ...daemonConfig.seedPeers.split(" ")]))
         fs.writeFileSync(path.join(dirname, "state.json"), "{}")
         fs.writeFileSync(path.join(dirname, "powerSnapshots.json"), JSON.stringify([daemonConfig.trustedPowerSnapshot]))
         console.log("Succesfully initialized in " + dirname)
