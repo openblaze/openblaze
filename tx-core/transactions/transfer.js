@@ -10,7 +10,7 @@ module.exports = async (tx) => {
 
     // Trying to send more than has
     if(BigInt(state.balances[tx.signer].amount) < BigInt(tx.input.amount)) {
-        throw new Error(`${tx.input.amount} is more than balance (${signer.amount})`)
+        throw new Error(`${tx.input.amount} is more than balance (${state.balances[tx.signer].amount})`)
     }
 
     // Remove balance
@@ -25,4 +25,6 @@ module.exports = async (tx) => {
 
     // add the amount to the balance
     state.balances[tx.input.reciever].amount = (BigInt(state.balances[tx.input.reciever].amount) + BigInt(tx.input.amount)).toString()
+
+    console.log(state)
 }
