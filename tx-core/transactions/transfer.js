@@ -25,6 +25,4 @@ module.exports = async (tx) => {
 
     // add the amount to the balance
     state.balances[tx.input.reciever].amount = (BigInt(state.balances[tx.input.reciever].amount) + BigInt(tx.input.amount)).toString()
-
-    console.log(state)
 }
