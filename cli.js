@@ -62,7 +62,15 @@ program.command("priv2pub <privkey>")
         let decodedKey = Buffer.from(privkey, "base64")
         console.log(Buffer.from(bls.getPublicKey(decodedKey)).toString("base64url"))
     })
-
+program.command("query <nodeAddress> <queryType> <queryInput>").description("Query network")
+    .action(async (nodeAddress, type, input) => {
+        console.log(await fetch('http://' + nodeAddress + "/query", {
+            method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
+                type: type,
+                input: JSON.parse(input)
+            })
+        }).then(res => res.json()))
+    })
 program.command("broadcast <nodeAddress> <privkey> <transactionType> <transactionInput>")
     .description("Broadcast transaction to network")
     .action(async (nodeAddress, privkey, type, txInput) => {
