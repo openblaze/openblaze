@@ -11,7 +11,7 @@ module.exports = async function (fastify, opts) {
             let result = await (require(path.join(__dirname, "..", "queries", req.body.type + ".js")))(req.body.input).catch(error => {
                 console.error("[QUERY ERROR] (" + req.body.type + ")", req.body.input, error)
             })
-            return { result, signer: config.pubkey, signature: Buffer.from(bls.sign(Buffer.from(JSON.stringify(result)), Buffer.from(config.privkey, "base64url"))).toString("base64url") }
+            return { result, signer: config.pubkey, signature: Buffer.from(bls.sign(Buffer.from(JSON.stringify(result)), Buffer.from(config.privkey, "base64url"))).toString("base64url"), sequence: state.sequence, time: Date.now() }
         } else {
             return { error: "Invalid type" }
         }
