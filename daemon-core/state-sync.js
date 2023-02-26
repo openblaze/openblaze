@@ -4,7 +4,7 @@ let crypto = require("crypto")
 let stateSuggestions = []
 module.exports = async () => {
 
-    for (peer of peers) {
+    for (peer of [...peers]) {
         checkForNewState(peer)
     }
 

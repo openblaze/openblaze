@@ -4,7 +4,7 @@ let attemptAddingPowerSnapshot = require("../utils/attemptAddingSnapshot")
 module.exports = async () => {
 
     for (peer of peers) {
-        await checkForNewSnapshots(peer)
+        checkForNewSnapshots(peer)
     }
 
 }
