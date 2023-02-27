@@ -64,7 +64,7 @@ program.command("priv2pub <privkey>")
     })
 program.command("query <nodeAddress> <queryType> <queryInput>").description("Query network")
     .action(async (nodeAddress, type, input) => {
-        console.log(await fetch('http://' + nodeAddress + "/query", {
+        console.log(await fetch('http://' + nodeAddress + "/provedQuery", {
             method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
                 type: type,
                 input: JSON.parse(input)
@@ -77,7 +77,7 @@ program.command("broadcast <nodeAddress> <privkey> <transactionType> <transactio
         let decodedKey = Buffer.from(privkey, "base64")
         let pubkey = Buffer.from(bls.getPublicKey(decodedKey)).toString("base64url")
         let anchoredTxId = await fetch('http://' + nodeAddress + "/lastTxId/" + pubkey).then(res => res.text())
-        console.log(anchoredTxId)
+        console.log("Anchor: " + anchoredTxId)
         if (anchoredTxId == "null") {
             anchoredTxId = null
         }
