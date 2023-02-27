@@ -35,11 +35,12 @@ module.exports = async function (fastify, opts) {
             let replied = false
             peers.forEach(async peer => {
                 if (replied) { return }
-                let queryReply = await fetch(`http://` + peer + "/query", { method: "POST", body: JSON.stringify(req.body), headers: { "Content-Type": "application/json" } }).catch(e => null).then(res => res.json())
+                let queryReply = await fetch(`http://` + peer + "/query", { method: "POST", body: JSON.stringify(req.body), headers: { "Content-Type": "application/json" } }).then(res => res.json()).catch(e => null)
                 addQueryReply(queryReply)
             })
 
             async function addQueryReply(queryReply) {
+                if (!queryReply || typeof queryReply.result != "object" || typeof queryReply.signer != "string" || typeof queryReply.signature != "string" || typeof queryReply.sequence != "number" || typeof queryReply.time != "number") { return }
                 if (!currentPowerSet.find(senatorpub => senatorpub.toString("base64url") == queryReply.signer)) { return }
                 if (!bls.verify(Buffer.from(queryReply.signature, 'base64'), Buffer.from(JSON.stringify(queryReply.result)), Buffer.from(queryReply.signer, "base64"))) {
                     return
