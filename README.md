@@ -1,8 +1,8 @@
-# Stateller - the decentralized state framework.
+# OpenBlaze - the decentralized state framework aka appchain SDK.
 
-Stateller is appchain framework designed for bootstrapping app-specific state machines from very zero, without relying on another chains for security.
+OpenBlaze is appchain framework designed for bootstrapping app-specific state machines from very zero, without relying on another chains for security.
 
-Stateller contains functionality for p2p and consensus, using FwPoA consensus mechanism for fair and secure system bootstrapping and existance, also having extra-lite nodes support thanks to [DAN](https://github.com/angrymouse/papers/blob/main/data-access-networks.md)
+OpenBlaze contains functionality for p2p and consensus, using FwPoA consensus mechanism for fair and secure system bootstrapping and existance, also having extra-lite nodes support thanks to [DAN](https://github.com/angrymouse/papers/blob/main/data-access-networks.md)
 
 ## Fixed-weight Proof-of-Authority (FwPoA)
 
