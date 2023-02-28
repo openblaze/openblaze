@@ -1,6 +1,6 @@
 module.exports = async (input) => {
     if (!currentPowerSet.find(senatorpk => senatorpk.toString("base64url") == input)) {
-        throw new Error("Provided address not belopngs to an active senator")
+        throw new Error("Provided address not belonngs to an active senator")
     }
     let elapsedTime = Math.round(Object.values(state.clock).reduce((pv, cv) => pv + cv, 0) / Object.values(state.clock).length) - state.senators[input].lastRewardsClaim
 

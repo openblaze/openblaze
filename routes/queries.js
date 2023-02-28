@@ -11,6 +11,7 @@ module.exports = async function (fastify, opts) {
         if (fs.existsSync(path.join(__dirname, "..", "queries", req.body.type + ".js"))) {
             let result = await (require(path.join(__dirname, "..", "queries", req.body.type + ".js")))(req.body.input).catch(error => {
                 console.error("[QUERY ERROR] (" + req.body.type + ")", req.body.input, error)
+                return { error: "" + error }
             })
             return {
                 result,
