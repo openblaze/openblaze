@@ -17,7 +17,8 @@
             "nominateToSenate": "1000000",
             "voteForSenator": "0",
             "log": "50",
-            "voteForTime": "0"
+            "voteForTime": "0",
+            "claimOperatingRewards":"0"
         }
     },
     clock:{}

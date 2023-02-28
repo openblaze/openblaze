@@ -147,9 +147,10 @@ daemon.command("init [directory]")
         if (options.bootstrap) {
             console.log("Bootstrapping chain")
             daemonConfig.trustedPowerSnapshot = `genesis:${daemonConfig.pubkey}:${daemonConfig.pubkey}`
-            genesis.senators[daemonConfig.pubkey] = { name: "Genesis node", links: [], description: "", contacts: [] }
+            genesis.senators[daemonConfig.pubkey] = { name: "Genesis node", links: [], description: "", contacts: [], lastRewardsClaim: Date.now() }
         }
         daemonConfig.nodeAddress = daemonConfig.externalIp + ":11520"
+
         fs.writeFileSync(path.join(dirname, "config.json"), JSON.stringify(daemonConfig, null, " "))
         fs.writeFileSync(path.join(dirname, "peers.json"), JSON.stringify([daemonConfig.externalIp + ":11520", ...daemonConfig.seedPeers.split(" ").filter(e => e.length > 0)]))
         fs.writeFileSync(path.join(dirname, "state.json"), JSON.stringify(genesis, null, " "))
