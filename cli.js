@@ -1,5 +1,5 @@
 let { Command } = require('commander');
-let program = new Command("stateller");
+let program = new Command("openblaze");
 let os = require('os');
 let fs = require("fs");
 let { fetch } = require("undici")
@@ -102,14 +102,14 @@ program.command("broadcast <nodeAddress> <privkey> <transactionType> <transactio
     })
 
 let daemon = program.command("daemon")
-    .description("Manage Stateller network daemon")
+    .description("Manage OpenBlaze network daemon")
 
 daemon.command("init [directory]")
-    .description("Initialize Stateller daemon working directory")
+    .description("Initialize OpenBlaze daemon working directory")
     .option('--use-defaults')
     .option('--overwrite')
     .action(async (dirname, options) => {
-        dirname = path.resolve((dirname || "~/.stateller").replaceAll("~", os.homedir()))
+        dirname = path.resolve((dirname || "~/.openblaze").replaceAll("~", os.homedir()))
         if (!fs.existsSync(dirname)) { fs.mkdirSync(dirname, { recursive: true }) } else {
             if (options.overwrite) {
                 fs.rmSync(dirname, { recursive: true, force: true })
@@ -143,9 +143,9 @@ daemon.command("init [directory]")
         console.log("Succesfully initialized in " + dirname)
     })
 daemon.command("start [directory]")
-    .description("Start Stateller daemon")
+    .description("Start OpenBlaze daemon")
     .action(async (dirname) => {
-        dirname = path.resolve((dirname || "~/.stateller").replaceAll("~", os.homedir()))
+        dirname = path.resolve((dirname || "~/.openblaze").replaceAll("~", os.homedir()))
         require("./daemon.js")(dirname)
     })
 program.parse()

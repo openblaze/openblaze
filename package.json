@@ -1,9 +1,9 @@
 {
-  "name": "stateller",
+  "name": "openblaze",
   "version": "0.0.1",
   "description": "State teller",
   "main": "cli.js",
-  "repository": "https://github.com/angrymouse/stateller",
+  "repository": "https://github.com/angrymouse/openblaze",
   "author": "Angrymouse <nik@hns.is>",
   "license": "ISC",
   "private": false,
