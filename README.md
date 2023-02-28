@@ -5,7 +5,7 @@ OpenBlaze is appchain framework designed for bootstrapping app-specific state ma
 
 OpenBlaze contains functionality for p2p and consensus, using FwPoA consensus mechanism for fair and secure system bootstrapping and existance, also having extra-lite nodes support thanks to [DAN](https://github.com/angrymouse/papers/blob/main/data-access-networks.md)
 
-[OpenBlaze SDK discord](https://discord.gg/Gm6uXZvgRV)
+[OpenBlaze SDK discord](https://discord.gg/WawAfjfn8p)
 
 ## Fixed-weight Proof-of-Authority (FwPoA)
 
