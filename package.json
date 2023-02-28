@@ -6,6 +6,7 @@
   "repository": "https://github.com/angrymouse/openblaze",
   "author": "Angrymouse <nik@hns.is>",
   "license": "ISC",
+  "bin": "./cli.js",
   "private": false,
   "dependencies": {
     "@fastify/autoload": "^5.7.1",

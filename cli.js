@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 let { Command } = require('commander');
 let program = new Command("openblaze");
 let os = require('os');
