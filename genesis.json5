@@ -1,0 +1,22 @@
+{
+    "senators": {
+        // "bls-pubkey": {
+        //     "name": "Moniker name",
+        //     "links": [],
+        //     "description": "Genesis node"
+        // }                                   // Put genesis node here as well as in powerSnapshots.json
+    },
+    "balances": {},
+    "lastTxIds": {},
+    "sequence": 1,
+    "processedTransactions": [],
+    "senateCandidates": {},
+    "params": {
+        "gas": {
+            "transfer": "1000",
+            "nominateToSenate": "1000000",
+            "voteForSenator": "0",
+            "log": "50"
+        }
+    }
+}

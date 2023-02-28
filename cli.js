@@ -4,6 +4,7 @@ let program = new Command("openblaze");
 let os = require('os');
 let fs = require("fs");
 let { fetch } = require("undici")
+let JSON5 = require("json5")
 const readline = require('node:readline');
 const defaults = require("./defaults.json")
 let { bls12_381: bls } = require('@noble/curves/bls12-381');
@@ -19,7 +20,11 @@ program.command('keygen')
         console.log("Private key:", Buffer.from(privkey).toString("base64url"))
         console.log("Public key:", Buffer.from(pubkey).toString("base64url"))
     });
-
+program.command('make-genesis-ps <pubkey>')
+    .description('Make genesis power snapshot from pubkey')
+    .action((str, options) => {
+        console.log(`genesis:${str}:${str}`)
+    });
 
 
 let b64command = program.command('base64').description("Operations with base64 encoding")
@@ -109,6 +114,7 @@ daemon.command("init [directory]")
     .description("Initialize OpenBlaze daemon working directory")
     .option('--use-defaults')
     .option('--overwrite')
+    .option('--bootstrap')
     .action(async (dirname, options) => {
         dirname = path.resolve((dirname || "~/.openblaze").replaceAll("~", os.homedir()))
         if (!fs.existsSync(dirname)) { fs.mkdirSync(dirname, { recursive: true }) } else {
@@ -120,6 +126,7 @@ daemon.command("init [directory]")
             }
 
         }
+        let genesis = JSON5.parse(fs.readFileSync(path.join(__dirname, "genesis.json5"), "utf8"))
         let privkey = bls.utils.randomPrivateKey()
         if (!options.useDefaults) { console.log("\nQuestions below are optional, you can skip it by entering empty line (just enter), however it's highly not recommended for decentralization reasons.\n") }
         let daemonConfig = {
@@ -137,9 +144,13 @@ daemon.command("init [directory]")
         if (daemonConfig.externalIp.length == 0) {
             daemonConfig.externalIp = await fetch("https://ifconfig.me/ip").then(res => res.text())
         }
+        if (options.bootstrap) {
+            daemonConfig.trustedPowerSnapshot = `genesis:${daemonConfig.pubkey}:${daemonConfig.pubkey}`
+            genesis.senators[daemonConfig.pubkey] = { name: "Genesis node", links: [], description: "", contacts: [] }
+        }
         fs.writeFileSync(path.join(dirname, "config.json"), JSON.stringify(daemonConfig, null, " "))
         fs.writeFileSync(path.join(dirname, "peers.json"), JSON.stringify([daemonConfig.externalIp + ":11520", ...daemonConfig.seedPeers.split(" ")]))
-        fs.writeFileSync(path.join(dirname, "state.json"), "{}")
+        fs.writeFileSync(path.join(dirname, "state.json"), JSON.stringify(genesis, null, " "))
         fs.writeFileSync(path.join(dirname, "powerSnapshots.json"), JSON.stringify([daemonConfig.trustedPowerSnapshot]))
         console.log("Succesfully initialized in " + dirname)
     })
