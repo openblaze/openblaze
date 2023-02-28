@@ -30,12 +30,16 @@ Note: Even if new validator doesn't have good intentions, it's still fine to let
 
 This system destroys (while not being superior to PoW) destroys some lacks of PoS:
 - Plutocracy 
+
 In this DAO structure, amount of token person/validator has doesn't represent his voting power, so no problem of rich entities pushing their interests against community.
 - Delegations
+
 As money is not taking big participation in consensus, there's no possibility or sense to "stake" coins to some entity, as it doesn't change voting power or rewards, also more nodes can't be launched from "staked" money, so dPoS problem is defeated.
 - High inflation
+
 As there's no more "staking", there's also no need to give rewards to stakers, who de-facto aren't contributing to network operation. 
 Now we can give good amount of coins to validators, while having inflation as low as possible.
 - Low market cap vulnerability
+
 As amount tokens doesn't matter for consensus anymore, there's no risk of someone buying huge part of tokens and taking over network.
 
