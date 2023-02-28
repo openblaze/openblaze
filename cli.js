@@ -145,14 +145,17 @@ daemon.command("init [directory]")
             daemonConfig.externalIp = await fetch("https://ifconfig.me/ip").then(res => res.text())
         }
         if (options.bootstrap) {
+            console.log("Bootstrapping chain")
             daemonConfig.trustedPowerSnapshot = `genesis:${daemonConfig.pubkey}:${daemonConfig.pubkey}`
             genesis.senators[daemonConfig.pubkey] = { name: "Genesis node", links: [], description: "", contacts: [] }
         }
         fs.writeFileSync(path.join(dirname, "config.json"), JSON.stringify(daemonConfig, null, " "))
-        fs.writeFileSync(path.join(dirname, "peers.json"), JSON.stringify([daemonConfig.externalIp + ":11520", ...daemonConfig.seedPeers.split(" ")]))
+        fs.writeFileSync(path.join(dirname, "peers.json"), JSON.stringify([daemonConfig.externalIp + ":11520", ...daemonConfig.seedPeers.split(" ").filter(e => e.length > 0)]))
         fs.writeFileSync(path.join(dirname, "state.json"), JSON.stringify(genesis, null, " "))
         fs.writeFileSync(path.join(dirname, "powerSnapshots.json"), JSON.stringify([daemonConfig.trustedPowerSnapshot]))
         console.log("Succesfully initialized in " + dirname)
+        console.log("Consensus pubkey: " + daemonConfig.pubkey)
+        console.log("Consensus privkey can be found in " + path.join(dirname, "config.json"))
     })
 daemon.command("start [directory]")
     .description("Start OpenBlaze daemon")

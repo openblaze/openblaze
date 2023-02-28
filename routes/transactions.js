@@ -4,23 +4,6 @@ let crypto = require("crypto");
 let { fetch } = require("undici")
 let txHandler = require("../tx-core/handler")
 module.exports = async function (fastify, opts) {
-    fastify.get("/snapshotsSince/:trustedSnapshotSignature", async (request, reply) => {
-        let requestedPowerIndex = powerSnapshots.findIndex(snapshot => crypto.createHash("sha256").update(snapshot.split(":")[0].split(";")[0]).digest("base64url") == request.params.trustedSnapshotSignature)
-        if (requestedPowerIndex < 0) {
-            reply.status(404)
-            return { error: "Requested trusted snapshot isn't available to this node" }
-        }
-        return { snapshots: powerSnapshots.slice(requestedPowerIndex + 1) }
-    })
-    fastify.get("/state", async (request, reply) => {
-        return JSON.stringify(state)
-    })
-    fastify.get("/stateSignature", async (request, reply) => {
-        let expires = Date.now() + 30000
-        let stateHash = crypto.createHash("sha256").update(JSON.stringify(state)).digest()
-        let signature = Buffer.from(bls.sign(Buffer.from(stateHash.toString("base64") + ";" + expires + ";" + state.sequence), Buffer.from(config.privkey, "base64")))
-        return { stateHash: stateHash.toString("base64"), signature: signature.toString("base64"), signer: config.pubkey, expires, sequence: state.sequence }
-    })
     fastify.post("/broadcastTx", async (request, reply) => {
         let threshold = Math.floor(currentPowerSet.length / 2) + 1
 
@@ -50,11 +33,11 @@ module.exports = async function (fastify, opts) {
         let dataForAccountSign = Buffer.from(JSON.stringify({ input: txBody.input, type: txBody.type, anchoredTxId: txBody.anchoredTxId, expires: txBody.expires }))
         if (!bls.verify(Buffer.from(txBody.signature, "base64"), dataForAccountSign, Buffer.from(txBody.signer, "base64"))) { return { error: "Signature verification failed" } }
 
-        if(!state.balances[txBody.signer]) {
+        if (!state.balances[txBody.signer]) {
             return { error: "Unable to afford gas" }
         }
-    
-        if(BigInt(state.balances[txBody.signer].amount) < BigInt(state.params.gas[txBody.type])) {
+
+        if (BigInt(state.balances[txBody.signer].amount) < BigInt(state.params.gas[txBody.type])) {
             return { error: `${state.params.gas[txBody.type]} is more than balance (${state.balances[txBody.signer].amount})` }
         }
 
@@ -101,9 +84,5 @@ module.exports = async function (fastify, opts) {
     fastify.get("/lastTxId/:account", async (request, reply) => {
 
         return state.lastTxIds[request.params.account] || request.params.account
-    })
-    fastify.get("/signatureForNextSnapshot", async (request, reply) => {
-
-        return { signer: config.pubkey, signature: Buffer.from(bls.sign(Buffer.from(Object.keys(state.senators).join(",")), Buffer.from(config.privkey, "base64url"))).toString("base64") }
     })
 }
