@@ -29,7 +29,7 @@ async function checkPendingStates() {
     let threshold = Math.floor(currentPowerSet.length / 2) + 1
     let stateHash = crypto.createHash("sha256").update(JSON.stringify(state)).digest()
     stateSuggestions = stateSuggestions.filter(suggestion => suggestion.expires > Date.now() && suggestion.sequence >= (state.sequence || 0) && suggestion.stateHash != stateHash)
-
+    if (stateSuggestions.length < 1) { return }
     let count = stateSuggestions.reduce((pv, cv) => {
         if (!pv[cv.stateHash]) {
             pv[cv.stateHash] = 1
