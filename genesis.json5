@@ -16,7 +16,9 @@
             "transfer": "1000",
             "nominateToSenate": "1000000",
             "voteForSenator": "0",
-            "log": "50"
+            "log": "50",
+            "voteForTime": "0"
         }
-    }
+    },
+    clock:{}
 }

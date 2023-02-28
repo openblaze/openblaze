@@ -10,6 +10,6 @@ module.exports = async (tx) => {
 
     state.senateCandidates[tx.input.senatorPubkey].votes.push(tx.signer)
     if (state.senateCandidates[tx.input.senatorPubkey].votes.length >= threshold) {
-        state.senators[tx.input.senatorPubkey] = state.senateCandidates[tx.input.senatorPubkey]
+        state.senators[tx.input.senatorPubkey] = { ...state.senateCandidates[tx.input.senatorPubkey] }
     }
 }

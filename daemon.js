@@ -22,6 +22,7 @@ module.exports = async (dirname) => {
     console.log("State hash: " + crypto.createHash("sha256").update(JSON.stringify(state)).digest("base64url"))
     let updatePeers = require("./daemon-core/p2p-discovery")
     let updateState = require("./daemon-core/state-sync")
+    let voteForTime = require("./daemon-core/clock")
     let updateSnapshots = require("./daemon-core/snapshot-sync")
     let buildNewSnapshot = require("./daemon-core/new-snapshot-builder")
     updatePeers()
@@ -31,6 +32,7 @@ module.exports = async (dirname) => {
     setInterval(updateSnapshots, 20000)
     setInterval(updateState, 10000)
     setInterval(buildNewSnapshot, 20000)
+    setInterval(voteForTime, 60000)
     function saveUpdates() {
         if (needToWrite.has("powerSnapshots")) {
             fs.writeFileSync(path.join(dirname, "powerSnapshots.json"), JSON.stringify(powerSnapshots))
