@@ -5,9 +5,9 @@ module.exports = async (tx) => {
     let txId = crypto.createHash("sha256").update(JSON.stringify({ input: tx.input, type: tx.type, anchoredTxId: tx.anchoredTxId, expires: tx.expires, signature: tx.signature })).digest("base64url")
     tx.id = txId
 
-    state.balances[tx.signer] = { amount: (BigInt(state.balances[tx.signer]?.amount || "0") - BigInt(state.params.gas[tx.type])).toString() }
+    state.balances[tx.signer] = { amount: (BigInt(state.balances[tx.signer]?.amount || "0") - BigInt(state.params.gas[tx.type] || "0")).toString() }
 
-    let senateRecieves = BigInt(state.params.gas[tx.type]) / BigInt(tx.senateSignatures.length)
+    let senateRecieves = BigInt(state.params.gas[tx.type] || "0") / BigInt(tx.senateSignatures.length)
 
     for (let signature of tx.senateSignatures) {
         if (!state.balances[signature.signer]) {
@@ -16,7 +16,7 @@ module.exports = async (tx) => {
             }
         }
 
-        state.balances[signature.signer].amount = (BigInt(state.balances[signature.signer].amount) + senateRecieves).toString()
+        state.balances[signature.signer].amount = (BigInt(state.balances[signature.signer]?.amount || "0") + senateRecieves).toString()
     }
 
     if (state.processedTransactions.includes(txId)) { return { error: "Already processed" } }
