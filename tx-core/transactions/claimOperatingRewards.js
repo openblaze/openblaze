@@ -13,7 +13,7 @@ module.exports = async (tx) => {
         throw new Error("Can claim operating rewards only once every 30 minutes")
     }
     let rewards = 100n * BigInt(Math.floor(elapsedTime / 100000)) //100s is put specially to incentivize rare reward claim and disincentivize reward claim spam (if senator claims once per 30m, part of rewards gets lost due to rounding, the more time the less rounding impact)
-    state.balances[tx.signer].amount = (BigInt(Math.floor(state.balances[tx.signer].amount) + rewards)).toString()
+    state.balances[tx.signer].amount = (BigInt(Math.floor(state.balances[tx.signer].amount)) + rewards).toString()
 
     state.senators[tx.signer].lastRewardsClaim = tx.input.time
 }
