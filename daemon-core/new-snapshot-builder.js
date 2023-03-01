@@ -6,7 +6,7 @@ module.exports = async () => {
     if (Object.keys(state.senators).join(",") == currentPowerSet.map(senatorpk => senatorpk.toString("base64url")).join(",")) {
         return
     }
-    console.log("Snapshot corresponds state, trying to generate new snapshot...")
+    console.log("Snapshot not corresponds state, trying to generate new snapshot...")
     let contentToSign = Buffer.from(Object.keys(state.senators).join(","))
     let signatures = []
 
