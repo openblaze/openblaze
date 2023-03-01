@@ -6,12 +6,15 @@
         //     "description": "Genesis node"
         // }                                   // Put genesis node here as well as in powerSnapshots.json
     },
-    "balances": {},
+    "balances": {
+        "ublaze": {}
+    },
     "lastTxIds": {},
     "sequence": 1,
     "processedTransactions": [],
     "senateCandidates": {},
     "params": {
+        "denom": "ublaze",
         "gas": {
             "transfer": "1000",
             "nominateToSenate": "1000000",
