@@ -10,7 +10,8 @@ module.exports = async (tx) => {
     let senateRecieves = BigInt(state.params.gas[tx.type] || "0") / BigInt(tx.senateSignatures.length)
 
     for (let signature of tx.senateSignatures) {
-        if (!state.balances[signature.signer][state.params.denom]) {
+        if (!state.balances[signature.signer]) {
+            state.balances[signature.signer] = {}
             state.balances[signature.signer][state.params.denom] = {
                 amount: "0"
             }
