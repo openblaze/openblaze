@@ -33,12 +33,12 @@ module.exports = async function (fastify, opts) {
         let dataForAccountSign = Buffer.from(JSON.stringify({ input: txBody.input, type: txBody.type, anchoredTxId: txBody.anchoredTxId, expires: txBody.expires }))
         if (!bls.verify(Buffer.from(txBody.signature, "base64"), dataForAccountSign, Buffer.from(txBody.signer, "base64"))) { return { error: "Signature verification failed" } }
 
-        if (!state.balances[txBody.signer] && BigInt(state.params.gas[txBody.type] || "") > 0n) {
+        if (!state.balances[txBody.signer] && BigInt(state.params.gas[txBody.type] || "") > 0n || !state.balances[txBody.signer][state.params.denom]) {
             return { error: "Unable to afford gas" }
         }
 
-        if (BigInt(state.balances[txBody.signer]?.amount || "0") < BigInt(state.params.gas[txBody.type] || "0")) {
-            return { error: `${state.params.gas[txBody.type]} is more than balance (${state.balances[txBody.signer].amount})` }
+        if (BigInt(state.balances[txBody.signer][state.params.denom]?.amount || "0") < BigInt(state.params.gas[txBody.type] || "0")) {
+            return { error: `${state.params.gas[txBody.type]} is more than balance (${state.balances[txBody.signer][state.params.denom].amount})` }
         }
 
         txBody.senateSignatures = txBody.senateSignatures.filter((item,

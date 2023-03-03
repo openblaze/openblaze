@@ -1,5 +1,5 @@
 module.exports = async (tx) => {
-    if (!tx.input || !tx.input.reciever || !tx.input.amount) {
+    if (!tx.input || !tx.input.reciever || !tx.input.denom || !tx.input.amount) {
         throw new Error("Not enough info")
     }
 
@@ -9,20 +9,21 @@ module.exports = async (tx) => {
     }
 
     // Trying to send more than has
-    if(BigInt(state.balances[tx.signer].amount) < BigInt(tx.input.amount)) {
-        throw new Error(`${tx.input.amount} is more than balance (${state.balances[tx.signer].amount})`)
+    if(BigInt(state.balances[tx.signer][tx.input.denom].amount) < BigInt(tx.input.amount)) {
+        throw new Error(`${tx.input.amount} is more than balance (${state.balances[tx.signer][tx.input.denom].amount})`)
     }
 
     // Remove balance
-    state.balances[tx.signer].amount = (BigInt(state.balances[tx.signer].amount) - BigInt(tx.input.amount)).toString()
+    state.balances[tx.signer][tx.input.denom].amount = (BigInt(state.balances[tx.signer][tx.input.denom].amount) - BigInt(tx.input.amount)).toString()
 
     // If the wallet doesnt exist create it
     if(!state.balances[tx.input.reciever]) {
-        state.balances[tx.input.reciever] = {
+        state.balances[tx.input.reciever] = {}
+        state.balances[tx.input.reciever][tx.input.denom] = {
             amount: "0"
         }
     }
 
     // add the amount to the balance
-    state.balances[tx.input.reciever].amount = (BigInt(state.balances[tx.input.reciever].amount) + BigInt(tx.input.amount)).toString()
+    state.balances[tx.input.reciever][tx.input.denom].amount = (BigInt(state.balances[tx.input.reciever][tx.input.denom].amount) + BigInt(tx.input.amount)).toString()
 }
