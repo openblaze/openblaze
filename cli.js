@@ -1,12 +1,13 @@
 #!/usr/bin/env node
+const defaults = require("./defaults.json")
 let { Command } = require('commander');
-let program = new Command("openblaze");
+let program = new Command(defaults.projectName);
 let os = require('os');
 let fs = require("fs");
 let { fetch } = require("undici")
 let JSON5 = require("json5")
 const readline = require('node:readline');
-const defaults = require("./defaults.json")
+
 let { bls12_381: bls } = require('@noble/curves/bls12-381');
 
 let path = require("path");
@@ -108,15 +109,15 @@ program.command("broadcast <nodeAddress> <privkey> <transactionType> <transactio
     })
 
 let daemon = program.command("daemon")
-    .description("Manage OpenBlaze network daemon")
+    .description("Manage " + defaults.fullProjectName + " network daemon")
 
 daemon.command("init [directory]")
-    .description("Initialize OpenBlaze daemon working directory")
+    .description("Initialize " + defaults.fullProjectName + " daemon working directory")
     .option('--use-defaults')
     .option('--overwrite')
     .option('--bootstrap')
     .action(async (dirname, options) => {
-        dirname = path.resolve((dirname || "~/.openblaze").replaceAll("~", os.homedir()))
+        dirname = path.resolve((dirname || "~/." + defaults.projectName).replaceAll("~", os.homedir()))
         if (!fs.existsSync(dirname)) { fs.mkdirSync(dirname, { recursive: true }) } else {
             if (options.overwrite) {
                 fs.rmSync(dirname, { recursive: true, force: true })
@@ -160,9 +161,9 @@ daemon.command("init [directory]")
         console.log("Consensus privkey can be found in " + path.join(dirname, "config.json"))
     })
 daemon.command("start [directory]")
-    .description("Start OpenBlaze daemon")
+    .description("Start " + defaults.fullProjectName + " daemon")
     .action(async (dirname) => {
-        dirname = path.resolve((dirname || "~/.openblaze").replaceAll("~", os.homedir()))
+        dirname = path.resolve((dirname || "~/." + defaults.projectName).replaceAll("~", os.homedir()))
         require("./daemon.js")(dirname)
     })
 program.parse()
