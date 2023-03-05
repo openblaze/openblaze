@@ -1,4 +1,6 @@
 {
     "seedPeers": "",
-    "trustedPowerSnapshot": ""
+    "trustedPowerSnapshot": "",
+    "projectName": "blazorhub",
+    "fullProjectName": "Blazor Hub"
 }
